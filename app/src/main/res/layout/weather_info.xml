@@ -103,6 +103,46 @@
                 android:text="湿度:57%"
                 android:textColor="@android:color/white"
                 android:textSize="15.0sp" />
+            <!-- 温度信息 -->
+            <TextView
+                android:id="@+id/nowtemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/humidity"
+                android:layout_marginLeft="15.0dip"
+                android:paddingTop="7.5dp"
+                android:singleLine="true"
+                android:text="温度:"
+                android:textColor="@android:color/white"
+                android:textSize="15.0sp"
+                />
+            <!-- 温度信息2 -->
+            <TextView
+                android:id="@+id/nowtemperature2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/humidity"
+                android:layout_toRightOf="@id/nowtemperature"
+                android:singleLine="true"
+                android:text="20"
+                android:textColor="@android:color/white"
+                android:textSize="30.0sp"
+                />
+            <!-- 温度信息3 -->
+            <TextView
+                android:id="@+id/nowtemperature3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/humidity"
+                android:layout_toRightOf="@id/nowtemperature2"
+
+                android:paddingTop="7.5dp"
+                android:singleLine="true"
+                android:text="C°"
+                android:textColor="@android:color/white"
+                android:textSize="15.0sp"
+                />
             <!-- PM2.5整体信息块 -->
             <LinearLayout
                 android:id="@+id/pm2_5_content"
@@ -169,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/humidity"
+                android:layout_below="@id/nowtemperature"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5.0dip" >
                 <!-- 天气情况图片示例 -->
