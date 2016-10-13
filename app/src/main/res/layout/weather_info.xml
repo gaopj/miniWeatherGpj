@@ -105,7 +105,7 @@
                 android:textSize="15.0sp" />
             <!-- 温度信息 -->
             <TextView
-                android:id="@+id/nowtemperature"
+                android:id="@+id/nowtemperature2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -119,11 +119,11 @@
                 />
             <!-- 温度信息2 -->
             <TextView
-                android:id="@+id/nowtemperature2"
+                android:id="@+id/nowtemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/humidity"
-                android:layout_toRightOf="@id/nowtemperature"
+                android:layout_toRightOf="@id/nowtemperature2"
                 android:singleLine="true"
                 android:text="20"
                 android:textColor="@android:color/white"
@@ -135,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/humidity"
-                android:layout_toRightOf="@id/nowtemperature2"
+                android:layout_toRightOf="@id/nowtemperature"
 
                 android:paddingTop="7.5dp"
                 android:singleLine="true"
