@@ -119,7 +119,7 @@
                 />
             <!-- 温度信息2 -->
             <TextView
-                android:id="@+id/nowtemperature"
+                android:id="@+id/wendu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/humidity"
@@ -135,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/humidity"
-                android:layout_toRightOf="@id/nowtemperature"
+                android:layout_toRightOf="@id/wendu"
 
                 android:paddingTop="7.5dp"
                 android:singleLine="true"
@@ -209,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/nowtemperature"
+                android:layout_below="@id/wendu"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5.0dip" >
                 <!-- 天气情况图片示例 -->

@@ -1,6 +1,7 @@
 package com.example.gaopj.class1test1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,15 +31,16 @@ import gaopj.util.NetUtil;
  * Created by lenovo on 2016/9/20.
  */
 public class MainActivity extends Activity implements View.OnClickListener {
+    private ImageView mCitySelect;
     private ImageView mUpdateBtn;
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
-            temperatureTv, climateTv, windTv, city_name_Tv;
+            temperatureTv, climateTv, windTv, city_name_Tv, wenduTv;
     private ImageView weatherImg, pmImg;
-private  static  final  int UPDATE_TODAY_WEATHER=1;
+    private static final int UPDATE_TODAY_WEATHER = 1;
 
-    private Handler mHandler = new Handler(){
-        public void handleMessage(android.os.Message msg){
-            switch (msg.what){
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
                 case UPDATE_TODAY_WEATHER:
                     updateTodayWeather((TodayWeather) msg.obj);
                     break;
@@ -47,21 +49,22 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
             }
         }
     };
+
     void initView() {
+        weatherImg = (ImageView) findViewById(R.id.weather_img);
+        pmImg = (ImageView) findViewById(R.id.pm2_5_img);
         city_name_Tv = (TextView) findViewById(R.id.title_city_name);
         cityTv = (TextView) findViewById(R.id.city);
         timeTv = (TextView) findViewById(R.id.time);
         humidityTv = (TextView) findViewById(R.id.humidity);
         weekTv = (TextView) findViewById(R.id.week_today);
         pmDataTv = (TextView) findViewById(R.id.pm_data);
-        pmQualityTv = (TextView) findViewById(R.id.pm2_5_quality
-        );
+        pmQualityTv = (TextView) findViewById(R.id.pm2_5_quality);
         pmImg = (ImageView) findViewById(R.id.pm2_5_img);
-        temperatureTv = (TextView) findViewById(R.id.temperature
-        );
+        temperatureTv = (TextView) findViewById(R.id.temperature);
         climateTv = (TextView) findViewById(R.id.climate);
         windTv = (TextView) findViewById(R.id.wind);
-        weatherImg = (ImageView) findViewById(R.id.weather_img);
+        wenduTv = (TextView) findViewById(R.id.wendu);
         city_name_Tv.setText("N/A");
         cityTv.setText("N/A");
         timeTv.setText("N/A");
@@ -72,6 +75,9 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
         temperatureTv.setText("N/A");
         climateTv.setText("N/A");
         windTv.setText("N/A");
+        wenduTv.setText("N/A");
+        weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_qing));
+        pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_0_50));
     }
 
     @Override
@@ -87,6 +93,8 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
             Log.d("myWeather", "网络挂了");
             Toast.makeText(MainActivity.this, "网络挂了！", Toast.LENGTH_LONG).show();
         }
+        mCitySelect = (ImageView) findViewById(R.id.title_city_manager);
+        mCitySelect.setOnClickListener(this);
         initView();
     }
 
@@ -119,9 +127,9 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
                     todayWeather = parseXML(responseStr);
                     if (todayWeather != null) {
                         Log.d("myWeather", todayWeather.toString());
-                        Message msg=new Message();
-                        msg.what=UPDATE_TODAY_WEATHER;
-                        msg.obj=todayWeather;
+                        Message msg = new Message();
+                        msg.what = UPDATE_TODAY_WEATHER;
+                        msg.obj = todayWeather;
                         mHandler.sendMessage(msg);
                     }
                 } catch (Exception e) {
@@ -137,6 +145,11 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
 
     @Override
     public void onClick(View view) {
+        if (view.getId() == R.id.title_city_manager) {
+            Intent i = new Intent(this, SelectCity.class);
+            // startActivity(i);
+            startActivityForResult(i, 1);
+        }
         if (view.getId() == R.id.title_update_btn) {
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code", "101010100");
@@ -147,6 +160,21 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
             } else {
                 Log.d("myWeather", "网络挂了");
                 Toast.makeText(MainActivity.this, "网络挂了！", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String newCityCode = data.getStringExtra("cityCode");
+            Log.d("myWeather", "选择的城市代码为：" + newCityCode);
+            if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
+                Log.d("myWeather", "选择的城市代码为" + newCityCode);
+                queryWeatherCode(newCityCode);
+            }
+            else {
+                Log.d("myWeather","网络挂了");
+                Toast.makeText(MainActivity.this,"网络挂了！",Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -186,8 +214,7 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
                                 ;
                                 todayWeather.setUpdatetime(xmlPullParser.getText());
                             } else if (xmlPullParser.getName().equals("shidu")) {
-                                eventType = xmlPullParser.next()
-                                ;
+                                eventType = xmlPullParser.next();
                                 todayWeather.setShidu(xmlPullParser.getText());
                             } else if (xmlPullParser.getName().equals("wendu")) {
                                 eventType = xmlPullParser.next();
@@ -218,13 +245,11 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
                                 todayWeather.setHigh(xmlPullParser.getText().substring(2).trim());
                                 highCount++;
                             } else if (xmlPullParser.getName().equals("low") && lowCount == 0) {
-                                eventType = xmlPullParser.next()
-                                ;
+                                eventType = xmlPullParser.next();
                                 todayWeather.setLow(xmlPullParser.getText().substring(2).trim());
                                 lowCount++;
                             } else if (xmlPullParser.getName().equals("type") && typeCount == 0) {
-                                eventType = xmlPullParser.next()
-                                ;
+                                eventType = xmlPullParser.next();
                                 todayWeather.setType(xmlPullParser.getText());
                                 typeCount++;
                             }
@@ -245,17 +270,68 @@ private  static  final  int UPDATE_TODAY_WEATHER=1;
         return todayWeather;
     }
 
-    void updateTodayWeather(TodayWeather todayWeather){
-        city_name_Tv.setText(todayWeather.getCity()+"天气");
+    void updateTodayWeather(TodayWeather todayWeather) {
+        city_name_Tv.setText(todayWeather.getCity() + "天气");
         cityTv.setText(todayWeather.getCity());
-        timeTv.setText(todayWeather.getUpdatetime()+ "发布");
-        humidityTv.setText("湿度："+todayWeather.getShidu());
+        timeTv.setText(todayWeather.getUpdatetime() + "发布");
+        humidityTv.setText("湿度：" + todayWeather.getShidu());
         pmDataTv.setText(todayWeather.getPm25());
         pmQualityTv.setText(todayWeather.getQuality());
         weekTv.setText(todayWeather.getDate());
-        temperatureTv.setText(todayWeather.getHigh()+"~"+todayWeather.getLow());
+        temperatureTv.setText(todayWeather.getHigh() + "~" + todayWeather.getLow());
         climateTv.setText(todayWeather.getType());
-        windTv.setText("风力:"+todayWeather.getFengli());
-        Toast.makeText(MainActivity.this,"更新成功！",Toast.LENGTH_SHORT).show();
+        windTv.setText("风力:" + todayWeather.getFengli());
+        wenduTv.setText(todayWeather.getWendu());
+        if (pmQualityTv.getText() == "优")
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_0_50));
+        else if (pmQualityTv.getText() == "良")
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_51_100));
+        else if (pmQualityTv.getText() == "轻度污染")
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_101_150));
+        else if (pmQualityTv.getText() == "中度污染")
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_151_200));
+        else if (pmQualityTv.getText() == "重度污染")
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_201_300));
+        else
+            pmImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_greater_300));
+
+        if (climateTv.getText().equals("暴雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_baoxue));
+        else if (climateTv.getText().equals("暴雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_baoyu));
+        else if (climateTv.getText().equals("大暴雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_dabaoyu));
+        else if (climateTv.getText().equals("大雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_daxue));
+        else if (climateTv.getText().equals("大雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_dayu));
+        else if (climateTv.getText().equals("多云"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_duoyun));
+        else if (climateTv.getText().equals("雷阵雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_leizhenyu));
+        else if (climateTv.getText().equals("雷阵雨冰雹"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_leizhenyubingbao));
+        else if (climateTv.getText().equals("特大暴雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_tedabaoyu));
+        else if (climateTv.getText().equals("雾"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_wu));
+        else if (climateTv.getText().equals("小雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_xiaoxue));
+        else if (climateTv.getText().equals("阴"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_yin));
+        else if (climateTv.getText().equals("雨加雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_yujiaxue));
+        else if (climateTv.getText().equals("阵雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_zhenxue));
+        else if (climateTv.getText().equals("阵雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_zhenyu));
+        else if (climateTv.getText().equals("中雪"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_zhongxue));
+        else if (climateTv.getText().equals("中雨"))
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_zhongyu));
+        else
+            weatherImg.setImageDrawable(getResources().getDrawable(R.drawable.biz_plugin_weather_qing));
+
+        Toast.makeText(MainActivity.this, "更新成功！", Toast.LENGTH_SHORT).show();
     }
 }
