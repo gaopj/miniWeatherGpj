@@ -5,10 +5,6 @@ package gaopj.bean;
  */
 
 public class TodayWeather {
-    private String city;
-    private String updatetime;
-    private String wendu;
-
     public String getType() {
         return type;
     }
@@ -105,6 +101,10 @@ public class TodayWeather {
         this.low = low;
     }
 
+    private String city;
+    private String updatetime;
+    private String wendu;
+
     private String shidu;
     private String pm25;
     private String quality;
@@ -114,22 +114,78 @@ public class TodayWeather {
     private String high;
     private String low;
     private String type;
+    private NextWeather next1;
+    private NextWeather next2;
+    private NextWeather next3;
+    private NextWeather next4;
+    private NextWeather next5;
+    private NextWeather next6;
+
+    public NextWeather getNext1() {
+        return next1;
+    }
+
+    public void setNext1(NextWeather next1) {
+        this.next1 = next1;
+    }
+
+    public NextWeather getNext2() {
+        return next2;
+    }
+
+    public void setNext2(NextWeather next2) {
+        this.next2 = next2;
+    }
+
+    public NextWeather getNext3() {
+        return next3;
+    }
+
+    public void setNext3(NextWeather next3) {
+        this.next3 = next3;
+    }
+
+    public NextWeather getNext4() {
+        return next4;
+    }
+
+    public void setNext4(NextWeather next4) {
+        this.next4 = next4;
+    }
+
+    public NextWeather getNext5() {
+        return next5;
+    }
+
+    public void setNext5(NextWeather next5) {
+        this.next5 = next5;
+    }
+
+    public NextWeather getNext6() {
+        return next6;
+    }
+
+    public void setNext6(NextWeather next6) {
+        this.next6 = next6;
+    }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "TodayWeather{" +
-                "city=["+city+']'+
-                ", updatetime=["+updatetime+']'+
-                ", wendu=["+wendu+']'+
-                ", shidu=["+shidu+']'+
-                ", pm25=["+pm25+']'+
-                ", quality=["+quality+']'+
-                ", fengxiang=["+fengxiang+']'+
-                ", fengli=["+fengli+']'+
-                ", date=["+date+']'+
-                ", high=["+high+']'+
-                ", low=["+low+']'+
-                ", type=["+type+']'+
+                "city=[" + city + ']' +
+                ", updatetime=[" + updatetime + ']' +
+                ", wendu=[" + wendu + ']' +
+                ", shidu=[" + shidu + ']' +
+                ", pm25=[" + pm25 + ']' +
+                ", quality=[" + quality + ']' +
+                ", fengxiang=[" + fengxiang + ']' +
+                ", fengli=[" + fengli + ']' +
+                ", date=[" + date + ']' +
+                ", high=[" + high + ']' +
+                ", low=[" + low + ']' +
+                ", type=[" + type + ']' +
                 '}';
     }
+
+
 }

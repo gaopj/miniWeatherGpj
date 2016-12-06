@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/nextweather4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nextday4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextwendu4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="温度"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nexttianqi4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="天气"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextfengli4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="风力"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nextweather5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:textColor="#ffffff">
+
+        <TextView
+            android:id="@+id/nextday5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextwendu5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="温度"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nexttianqi5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="天气"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextfengli5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="风力"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nextweather6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/nextday6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextwendu6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="温度"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nexttianqi6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="天气"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/nextfengli6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="风力"
+            android:textColor="#ffffff"/>
+    </LinearLayout>
+
+
+</LinearLayout>
