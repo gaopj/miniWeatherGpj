@@ -1,11 +1,17 @@
 package com.example.gaopj.class1test1;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +45,9 @@ import gaopj.util.NetUtil;
  * Created by lenovo on 2016/9/20.
  */
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+
+    private final int SDK_PERMISSION_REQUEST = 127;
+    private String permissionInfo;
 
     private ViewPageAdapter vpAdapter;
     private ViewPager vp;
@@ -74,6 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private Animation operatingAnim;
     private ImageView mCitySelect;
     private ImageView mUpdateBtn;
+    private ImageView location;
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
             temperatureTv, climateTv, windTv, city_name_Tv, wenduTv;
     private ImageView weatherImg, pmImg;
@@ -146,7 +156,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener(this);
-
+        location= (ImageView) findViewById(R.id.title_location);
+        location.setOnClickListener(this);
         rotete_update_btn = (ImageView) findViewById(R.id.title_update_zhuan_btn);
         operatingAnim = AnimationUtils.loadAnimation(this, R.anim.update_btn_rotate);
         LinearInterpolator lin = new LinearInterpolator();
@@ -247,6 +258,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 Log.d("myWeather", "网络挂了");
                 Toast.makeText(MainActivity.this, "网络挂了！", Toast.LENGTH_LONG).show();
             }
+        }
+        if(view.getId()==R.id.title_location)
+        {
+            Log.d("dingwei", "你点击了定位按钮");
+            getPersimmions();
+            startActivity(new Intent(MainActivity.this, LocationActivity.class));
         }
     }
 
@@ -686,6 +703,62 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+
+    @TargetApi(23)
+    private void getPersimmions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ArrayList<String> permissions = new ArrayList<String>();
+            /***
+             * 定位权限为必须权限，用户如果禁止，则每次进入都会申请
+             */
+            // 定位精确位置
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+			/*
+			 * 读写权限和电话状态权限非必要权限(建议授予)只会申请一次，用户同意或者禁止，只会弹一次
+			 */
+            // 读写权限
+            if (addPermission(permissions, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionInfo += "Manifest.permission.WRITE_EXTERNAL_STORAGE Deny \n";
+            }
+            // 读取电话状态权限
+            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
+                permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
+            }
+
+            if (permissions.size() > 0) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
+            }
+        }
+    }
+
+    @TargetApi(23)
+    private boolean addPermission(ArrayList<String> permissionsList, String permission) {
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+            if (shouldShowRequestPermissionRationale(permission)){
+                return true;
+            }else{
+                permissionsList.add(permission);
+                return false;
+            }
+
+        }else{
+            return true;
+        }
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // TODO Auto-generated method stub
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
 }

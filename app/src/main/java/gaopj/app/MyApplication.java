@@ -1,8 +1,12 @@
 package gaopj.app;
 
 import android.app.Application;
+import android.app.Service;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.util.Log;
+
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,12 +18,18 @@ import java.util.List;
 
 import gaopj.bean.City;
 import gaopj.bean.CityDB;
+import gaopj.service.LocationService;
+
+
+
 
 /**
  * Created by gpj on 2016/10/18.
  */
 
 public class MyApplication extends Application {
+    public LocationService locationService;
+    public Vibrator mVibrator;
     private static final String TAG = "MyAPP";
     private static MyApplication mApplication;
     private CityDB mCityDB;
@@ -27,6 +37,9 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+
         super.onCreate();
         Log.d(TAG, "MyAppLication->Oncreate");
         mApplication = this;
