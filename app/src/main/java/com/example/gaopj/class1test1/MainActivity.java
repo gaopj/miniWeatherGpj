@@ -263,12 +263,26 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         {
             Log.d("dingwei", "你点击了定位按钮");
             getPersimmions();
-            startActivity(new Intent(MainActivity.this, LocationActivity.class));
+
+            Intent i1 = new Intent(this, LocationActivity.class);
+            startActivityForResult(i1, 2);
+            //startActivity(new Intent(MainActivity.this, LocationActivity.class));
         }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
+            String newCityCode = data.getStringExtra("cityCode");
+            Log.d("myWeather", "选择的城市代码为：" + newCityCode);
+            if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
+                Log.d("myWeather", "网络OK");
+                queryWeatherCode(newCityCode);
+            } else {
+                Log.d("myWeather", "网络挂了");
+                Toast.makeText(MainActivity.this, "网络挂了！", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == 2 && resultCode == RESULT_OK) {
             String newCityCode = data.getStringExtra("cityCode");
             Log.d("myWeather", "选择的城市代码为：" + newCityCode);
             if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {

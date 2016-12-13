@@ -6,15 +6,22 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.Poi;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import gaopj.app.MyApplication;
+import gaopj.bean.City;
 import gaopj.service.LocationService;
 
 /***
@@ -28,8 +35,14 @@ import gaopj.service.LocationService;
 public class LocationActivity extends Activity {
 	private LocationService locationService;
 	private TextView LocationResult;
+	private Button fanhui;
 	private Button startLocation;
+	private String dingweidiqu="";
+	private String selectcode="";
+	List<City> cityList;
+	private MyApplication myApplication;
 
+	private ImageView back;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -39,7 +52,43 @@ public class LocationActivity extends Activity {
 		LocationResult = (TextView) findViewById(R.id.textView1);
 		LocationResult.setMovementMethod(ScrollingMovementMethod.getInstance());
 		startLocation = (Button) findViewById(R.id.addfence);
+		fanhui = (Button) findViewById(R.id.fanhui);
+		//startLocation = (ImageView) findViewById(R.id.addfence);
+		back= (ImageView) findViewById(R.id.title_back);
+		myApplication= (MyApplication)getApplication();
+		cityList=myApplication.getCityList();
 
+		//back.setOnClickListener(this);
+
+//		back.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				//locationService.stop();
+//				Intent i = new Intent();
+//				if(!selectcode.equals(""))
+//					i.putExtra("cityCode",selectcode);
+//				int j=0;
+//				for (;j<cityList.size();j++)
+//				{
+//					String ct=cityList.get(j).getCity().toString();
+//					if(ct.equals(dingweidiqu))
+//					{
+//						Log.i("baidu","对上了"+cityList.get(j).getNumber().toString());
+//						selectcode=cityList.get(j).getNumber().toString();
+//						break;
+//					}
+//				}
+//				if(j==cityList.size())
+//				{
+//					Log.i("baidu","没对上");
+//					i.putExtra("cityCode", "101010100");
+//				}else {
+//					i.putExtra("cityCode", selectcode);
+//				}
+//				setResult(RESULT_OK,i);
+//				finish();
+//			}
+//		});
 	}
 
 	/**
@@ -56,6 +105,12 @@ public class LocationActivity extends Activity {
 		}
 	}
 
+	public void jiarurizhi(String str)
+	{
+		dingweidiqu=str.substring(0,str.length()-1);
+	    Log.i("baidu","dingweidiqu:"+dingweidiqu);
+
+	}
 
 	/***
 	 * Stop location service
@@ -83,10 +138,47 @@ public class LocationActivity extends Activity {
 		} else if (type == 1) {
 			locationService.setLocationOption(locationService.getOption());
 		}
+		locationService.start();
+		fanhui.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//Toast.makeText(LocationActivity.this,"点击了返回",Toast.LENGTH_LONG).show();
+				Log.i("fanhui","点击了返回");
+
+				locationService.stop();
+				Intent i = new Intent();
+				if(!selectcode.equals(""))
+					i.putExtra("cityCode",selectcode);
+				int j=0;
+				for (;j<cityList.size();j++)
+				{
+					String ct=cityList.get(j).getCity().toString();
+					if(ct.equals(dingweidiqu))
+					{
+						Log.i("baidu","对上了"+cityList.get(j).getNumber().toString());
+						selectcode=cityList.get(j).getNumber().toString();
+						break;
+					}
+				}
+				if(j==cityList.size())
+				{
+					Log.i("baidu","没对上");
+					i.putExtra("cityCode", "101010100");
+				}else {
+					i.putExtra("cityCode", selectcode);
+				}
+				setResult(RESULT_OK,i);
+				finish();
+
+
+			}
+		});
+
 		startLocation.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				Log.i("fanhui","点击了定位按钮");
 				if (startLocation.getText().toString().equals(getString(R.string.startlocation))) {
 					locationService.start();// 定位SDK
 					// start之后会默认发起一次定位请求，开发者无须判断isstart并主动调用request
@@ -113,6 +205,7 @@ public class LocationActivity extends Activity {
 			Log.i("baidu","onReceiveLocation");
 			if (null != location && location.getLocType() != BDLocation.TypeServerError) {
 				StringBuffer sb = new StringBuffer(256);
+				StringBuffer diqu=new StringBuffer(64);
 				sb.append("time : ");
 				/**
 				 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；
@@ -138,6 +231,7 @@ public class LocationActivity extends Activity {
 				sb.append("\ncity : ");// 城市
 				sb.append(location.getCity());
 				sb.append("\nDistrict : ");// 区
+				diqu.append(location.getDistrict());
 				sb.append(location.getDistrict());
 				sb.append("\nStreet : ");// 街道
 				sb.append(location.getStreet());
@@ -191,9 +285,52 @@ public class LocationActivity extends Activity {
 					sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
 				}
 				logMsg(sb.toString());
+				jiarurizhi(diqu.toString());
+
 				Log.i("baidu",sb.toString());
+				Log.i("baidu",diqu.toString());
 			}
 		}
 
 	};
+
+//	@Override
+//	public void onClick(View view) {
+//		switch (view.getId()){
+//			case  R.id.title_back:
+//				locationService.stop();
+//				Intent i = new Intent();
+//				if(!selectcode.equals(""))
+//					i.putExtra("cityCode",selectcode);
+//				setResult(RESULT_OK,i);
+//
+//				int j=0;
+//				for (;j<cityList.size();j++)
+//				{
+//					String ct=cityList.get(j).getCity().toString();
+//					if(ct.equals(dingweidiqu))
+//					{
+//						Log.i("baidu","对上了"+cityList.get(j).getNumber().toString());
+//						selectcode=cityList.get(j).getNumber().toString();
+//						SharedPreferences mySharedPreferences = getSharedPreferences("config", Activity.MODE_PRIVATE);
+//						SharedPreferences.Editor editor = mySharedPreferences.edit();
+//						editor.putString("main_city_code",selectcode );
+//						editor.commit();
+//						break;
+//					}
+//				}
+//				if(j==cityList.size())
+//				{
+//					Log.i("baidu","没对上");
+//					i.putExtra("cityCode", "101010100");
+//				}else {
+//					i.putExtra("cityCode", selectcode);
+//				}
+//				setResult(RESULT_OK,i);
+//				finish();
+//				break;
+//			default:
+//				break;
+//		}
+//	}
 }
