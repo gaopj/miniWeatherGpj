@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather_gpj</string>
+    <string name="app_name">鸡仔天气</string>
     <string name="startlocation">开始定位</string>
     <string name="stoplocation">停止定位</string>
 </resources>
